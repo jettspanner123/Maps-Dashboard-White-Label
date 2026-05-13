@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -133,4 +134,8 @@
   .maplibregl-popup-tip {
     @apply hidden!;
   }
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif;
 }

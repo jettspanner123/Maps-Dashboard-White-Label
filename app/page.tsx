@@ -1,5 +1,5 @@
 import React from "react";
-import HomeScreenControllerView from "./screens/HomeScreen/HomeScreenControllerView";
+import HomeScreenControllerView from "./screens/homscreen/HomeScreenControllerView";
 
 export default function Home(): React.JSX.Element {
   return (
