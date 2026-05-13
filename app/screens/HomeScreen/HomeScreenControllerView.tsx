@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import HomeScreenBackgroundMapsView from "./Views/HomeScreenBackgroundMapsView";
-import HomeScreenSideBarControlsView from "@/app/screens/HomeScreen/Views/HomeScreenSideBarControllsView";
+import HomeScreenBackgroundMapsView from "./views/HomeScreenBackgroundMapsView";
+import HomeScreenSideBarControlsView from "@/app/screens/HomeScreen/views/HomeScreenSideBarControllsView";
 
 export default function HomeScreenControllerView(): React.JSX.Element {
     return (
