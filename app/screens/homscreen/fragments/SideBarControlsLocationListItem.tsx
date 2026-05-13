@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPlaceItem } from "../views/HomeScreenSideBarControllsView";
-import { useCurrentLocation } from "@/app/store/CurrentLocationStore";
+import { useCurrentLocationStore } from "@/app/store/CurrentLocationStore";
 import MapLocationUtil from "@/app/utils/MapLocationUtil";
 
 export default function SideBarControlsLocationListItem({
@@ -8,7 +8,7 @@ export default function SideBarControlsLocationListItem({
 }: {
   place: MapPlaceItem;
 }): React.JSX.Element {
-  const setCurrentLocationData = useCurrentLocation(
+  const setCurrentLocationData = useCurrentLocationStore(
     (state) => state.setCurrentLocationData,
   );
 
@@ -29,7 +29,7 @@ export default function SideBarControlsLocationListItem({
           <div className="w-full flex justify-between items-center ">
             <p className="font-semibold text-[1.25rem]">{place.name}</p>
           </div>
-          <div className="h-2 w-2 bg-green-300 rounded-full absolute top-1/2 -translate-y-1/2 right-[1.25rem]" />
+          <div className="h-[70%] w-2 bg-green-300 rounded-full absolute top-1/2 -translate-y-1/2 right-[1.25rem]" />
 
           <div className="flex gap-2 font-bold text-white/50">
             <p>{place.longitude}</p>-<p>{place.latitude}</p>
