@@ -22,6 +22,8 @@ import { useCurrentLocationStore } from "@/app/store/CurrentLocationStore";
 import { IoChevronDown } from "react-icons/io5";
 import { TbMapSearch } from "react-icons/tb";
 import { IoMdGlobe } from "react-icons/io";
+import SectionHeadingComponent from "@/app/components/shared/SectionHeadingComponent";
+import HomeScreenConstants from "../constant/HomeScreenConstants";
 
 export interface MapPlaceItem {
   name: string;
@@ -131,9 +133,7 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
               className="w-full outline-none rounded-full bg-white/10 placeholder:text-white/80 font-roboto py-3 px-6 border border-white/15 text-white text-[1.25rem]"
             />
 
-            <h3 className="font-bold font-roboto text-[1rem] text-white/40 mt-[1.5rem] mb-[0.5rem]">
-              Preset Locations
-            </h3>
+            <SectionHeadingComponent text="Preset Locations" />
             <SideBarControlsLocationList>
               {CurrentLocationConstants.current.PLACES.map((place) => (
                 <SideBarControlsLocationListItem
@@ -176,16 +176,32 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
           {/* MARK: View State Dropdown */}
           <motion.div
             animate={{
-              height: isViewStateDropdownExpanded ? 240 : 80,
+              height: isViewStateDropdownExpanded ? "auto" : 80,
               borderRadius: isViewStateDropdownExpanded ? 32 : 200,
-              paddingInline: isViewStateDropdownExpanded ? 16 : 4,
+              paddingInline: isViewStateDropdownExpanded ? 14 : 4,
+              scale: isViewStateDropdownExpanded ? 1.1 : 1,
+              top: isViewStateDropdownExpanded ? 20 : 16,
+              right: isViewStateDropdownExpanded ? 470 : 452,
+              paddingBlock: isViewStateDropdownExpanded ? 14 : 0,
+              paddingBottom: isViewStateDropdownExpanded ? 16 : 0,
             }}
-            className="absolute right-[28.25rem] top-[0.75rem] bg-[#1a1a1a] border border-white/20 w-[21rem] p-1.5 pointer-events-auto font-bold font-roboto text-white text-[1.35rem] overflow-hidden"
+            whileTap={{
+              scale: isViewStateDropdownExpanded ? 0.95 : 1,
+            }}
+            className="absolute  bg-[#1a1a1a] cursor-pointer border border-white/20 w-[21rem] pointer-events-auto font-bold font-roboto text-white text-[1.35rem] overflow-hidden"
             onClick={() =>
               setIsViewStateDropdownExpanded(!isViewStateDropdownExpanded)
             }
           >
-            <div className="w-full h-[5rem] flex items-center py-1.5 gap-4">
+            <motion.div
+              animate={{
+                backgroundColor: isViewStateDropdownExpanded
+                  ? "#ffffff10"
+                  : "#1a1a1a",
+                paddingInline: isViewStateDropdownExpanded ? 8 : 0,
+              }}
+              className="w-full h-[5rem] flex items-center py-1.5 gap-4 rounded-full"
+            >
               <div className="h-full aspect-square bg-white/10 rounded-full flex justify-center items-center">
                 {viewState == HomeScreenViewState.MAPS && (
                   <TbMapSearch size={25} />
@@ -199,10 +215,25 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
               <div className="h-full aspect-square rounded-full flex justify-center items-center pointer-events-auto">
                 <IoChevronDown />
               </div>
-            </div>
+            </motion.div>
 
             {isViewStateDropdownExpanded && (
-              <div className="w-full h-[5rem] flex items-center py-1.5 gap-4"></div>
+              <React.Fragment>
+                <SectionHeadingComponent text="Application View States" />
+                {HomeScreenConstants.current.VIEW_STATE_LIST.map(
+                  (item, index) => {
+                    return (
+                      <div
+                        key={`${item.name}-${item.viewState.toString()}-${index}`}
+                        style={{
+                          marginTop: index != 0 ? 8 : 0,
+                        }}
+                        className="w-full h-[5rem] flex items-center py-1.5 gap-4 hover:bg-white/10 bg-white/5 rounded-full"
+                      ></div>
+                    );
+                  },
+                )}
+              </React.Fragment>
             )}
           </motion.div>
           {/* MARK: View State Dropdown End */}
