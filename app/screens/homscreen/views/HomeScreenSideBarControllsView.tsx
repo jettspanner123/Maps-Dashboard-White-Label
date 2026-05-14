@@ -24,6 +24,7 @@ import { TbMapSearch } from "react-icons/tb";
 import { IoMdGlobe } from "react-icons/io";
 import SectionHeadingComponent from "@/app/components/shared/SectionHeadingComponent";
 import HomeScreenConstants from "../constant/HomeScreenConstants";
+import Counter from "@/components/Counter";
 
 export interface MapPlaceItem {
   name: string;
@@ -46,6 +47,8 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
 
   const [isViewStateDropdownExpanded, setIsViewStateDropdownExpanded] =
     React.useState<boolean>(false);
+
+  const [aqi, setAqi] = React.useState<number>(0);
 
   function handleSidebarStateButton() {
     if (sideBarOpenState == HomeScreenSideBarState.OPEN)
@@ -251,12 +254,45 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
             )}
           </motion.div>
           {/* MARK: View State Dropdown End */}
+
+          {/* MARK: Map Controlls Button */}
           <HomeScreenFloatingActionButton
             onClick={handleToggleMapControls}
             className={`top-[6.5rem] right-[0.5rem] ${showBackgroundMapControls ? `bg-white text-black` : `text-white`}`}
           >
             <MdKeyboardCommandKey size={26} />
           </HomeScreenFloatingActionButton>
+
+          <motion.div
+            initial={false}
+            animate={{
+              right: viewState === HomeScreenViewState.MAPS ? 104 : 0,
+              y:
+                viewState === HomeScreenViewState.MAPS
+                  ? 104
+                  : window.innerHeight - 210,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              delay: viewState == HomeScreenViewState.MAPS ? 0.25 : 0.75,
+            }}
+            className="absolute bottom-0 p-[1rem] rounded-[5rem] bg-[#1a1a1a] cursor-pointer border border-white/20 pointer-events-auto font-semibold font-roboto text-white text-[1.25rem] overflow-hidden flex justify-center items-center w-[21rem] flex-col"
+          >
+            <Counter
+              value={aqi}
+              fontSize={80}
+              padding={5}
+              gap={10}
+              textColor="white"
+              fontWeight={900}
+            />
+
+            <div className="w-[70%] rounded-full py-1 bg-green-300/20 hover:bg-green-300/50 flex justify-center items-center mt-1">
+              <span className="text-green-300 font-bold font-roboto">AQI</span>
+            </div>
+          </motion.div>
           <AnimatePresence>
             {showBackgroundMapControls && (
               <motion.div

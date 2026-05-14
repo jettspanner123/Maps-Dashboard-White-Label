@@ -13,6 +13,7 @@ import {
   HomeScreenBackgroundMapState,
   HomeScreenSideBarState,
 } from "@/app/store/interfaces/HomeScreenStoreInterface";
+import CurrentLocationConstants from "@/app/constants/CurrentLocationConstants";
 
 function MapLoadHandler({ onMapLoad }: { onMapLoad: () => void }) {
   const { isLoaded } = useMap();
@@ -53,8 +54,11 @@ export default function HomeScreenBackgroundMapsView(): React.JSX.Element {
       <div className="w-full h-full absolute top-0 left-0">
         <Map
           ref={mapRef}
-          center={[76.65973488064857, 30.516271329486433]}
-          zoom={15}
+          center={[
+            CurrentLocationConstants.current.DEFAULT_LONGITUDE - 6.5,
+            CurrentLocationConstants.current.DEFAULT_LATITUDE,
+          ]}
+          zoom={6}
         >
           <MapLoadHandler onMapLoad={handleMapLoaded} />
           <MapMarker longitude={longitude} latitude={latitude}>
