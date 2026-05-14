@@ -7,6 +7,11 @@ export enum HomeScreenBackgroundMapState {
   LOADED,
   LOADING,
 }
+
+export enum HomeScreenViewState {
+  MAPS = "Maps View",
+  AIRFLOW = "Air Flow View"
+}
 export default interface HomeScreenStoreInterface {
   sideBarOpenState: HomeScreenSideBarState;
   setSideBarOpenState: (state: HomeScreenSideBarState) => void;
@@ -14,4 +19,6 @@ export default interface HomeScreenStoreInterface {
   setBackgroundMapState: (state: HomeScreenBackgroundMapState) => void;
   showBackgroundMapControls: boolean;
   toggleBackgroundMapControls: () => void;
+  viewState: HomeScreenViewState;
+  setViewState: (state: HomeScreenViewState) => void;
 }

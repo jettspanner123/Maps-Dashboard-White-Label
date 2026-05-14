@@ -12,11 +12,16 @@ import { useHomeScreenStore } from "@/app/store/HomeScreenStore";
 import {
   HomeScreenBackgroundMapState,
   HomeScreenSideBarState,
+  HomeScreenViewState,
 } from "@/app/store/interfaces/HomeScreenStoreInterface";
 import HomeScreenFloatingActionButton from "@/app/components/static/HomeScreenFloatingActionButton";
 import { MdKeyboardCommandKey, MdOutlineRefresh } from "react-icons/md";
-import { FaMinus, FaPlus } from "react-icons/fa6";
+import { FaLocationDot, FaMinus, FaPlus } from "react-icons/fa6";
 import { ImCompass } from "react-icons/im";
+import { useCurrentLocationStore } from "@/app/store/CurrentLocationStore";
+import { IoChevronDown } from "react-icons/io5";
+import { TbMapSearch } from "react-icons/tb";
+import { IoMdGlobe } from "react-icons/io";
 
 export interface MapPlaceItem {
   name: string;
@@ -29,10 +34,16 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
     setSideBarOpenState,
     sideBarOpenState,
     setBackgroundMapState,
-    backgroundMapState,
     toggleBackgroundMapControls,
     showBackgroundMapControls,
+    viewState,
+    setViewState,
   } = useHomeScreenStore();
+
+  const { placeId } = useCurrentLocationStore();
+
+  const [isViewStateDropdownExpanded, setIsViewStateDropdownExpanded] =
+    React.useState<boolean>(false);
 
   function handleSidebarStateButton() {
     if (sideBarOpenState == HomeScreenSideBarState.OPEN)
@@ -141,6 +152,60 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
           >
             <MdOutlineRefresh size={30} color="white" />
           </HomeScreenFloatingActionButton>
+          <div className="absolute right-[6.5rem] top-[0.75rem] bg-[#1a1a1a] rounded-full border border-white/20 h-[5rem] w-[21rem] p-1.5 pointer-events-auto flex items-center gap-4 font-bold font-roboto text-white text-[1.35rem] overflow-hidden">
+            <div className="h-full aspect-square bg-white/10 rounded-full flex justify-center items-center">
+              <FaLocationDot />
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.span
+                animate={{ y: 0, opacity: 1 }}
+                initial={{ y: 150, opacity: 0 }}
+                exit={{ y: -150, opacity: 0 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.76, 0, 0.24, 1],
+                }}
+                className="inline-block"
+                key={placeId}
+              >
+                {placeId.split("-")[0]}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+
+          {/* MARK: View State Dropdown */}
+          <motion.div
+            animate={{
+              height: isViewStateDropdownExpanded ? 240 : 80,
+              borderRadius: isViewStateDropdownExpanded ? 32 : 200,
+              paddingInline: isViewStateDropdownExpanded ? 16 : 4,
+            }}
+            className="absolute right-[28.25rem] top-[0.75rem] bg-[#1a1a1a] border border-white/20 w-[21rem] p-1.5 pointer-events-auto font-bold font-roboto text-white text-[1.35rem] overflow-hidden"
+            onClick={() =>
+              setIsViewStateDropdownExpanded(!isViewStateDropdownExpanded)
+            }
+          >
+            <div className="w-full h-[5rem] flex items-center py-1.5 gap-4">
+              <div className="h-full aspect-square bg-white/10 rounded-full flex justify-center items-center">
+                {viewState == HomeScreenViewState.MAPS && (
+                  <TbMapSearch size={25} />
+                )}
+                {viewState == HomeScreenViewState.AIRFLOW && (
+                  <IoMdGlobe size={25} />
+                )}
+              </div>
+
+              <span className="w-full">{viewState.toLocaleString()}</span>
+              <div className="h-full aspect-square rounded-full flex justify-center items-center pointer-events-auto">
+                <IoChevronDown />
+              </div>
+            </div>
+
+            {isViewStateDropdownExpanded && (
+              <div className="w-full h-[5rem] flex items-center py-1.5 gap-4"></div>
+            )}
+          </motion.div>
+          {/* MARK: View State Dropdown End */}
 
           <HomeScreenFloatingActionButton
             onClick={handleToggleMapControls}
@@ -148,7 +213,6 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
           >
             <MdKeyboardCommandKey size={26} />
           </HomeScreenFloatingActionButton>
-
           <AnimatePresence>
             {showBackgroundMapControls && (
               <motion.div

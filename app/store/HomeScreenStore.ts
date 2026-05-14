@@ -2,6 +2,7 @@ import { create } from "zustand";
 import HomeScreenStoreInterface, {
   HomeScreenBackgroundMapState,
   HomeScreenSideBarState,
+  HomeScreenViewState,
 } from "./interfaces/HomeScreenStoreInterface";
 
 export const useHomeScreenStore = create<HomeScreenStoreInterface>((set) => ({
@@ -16,4 +17,6 @@ export const useHomeScreenStore = create<HomeScreenStoreInterface>((set) => ({
     set((state) => ({
       showBackgroundMapControls: !state.showBackgroundMapControls,
     })),
+  viewState: HomeScreenViewState.MAPS,
+  setViewState: (state: HomeScreenViewState) => set({ viewState: state }),
 }));
