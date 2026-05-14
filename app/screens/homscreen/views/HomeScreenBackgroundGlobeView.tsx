@@ -1,54 +1,63 @@
 import React from "react";
 import { Map, MapArc } from "@/components/ui/map";
-
-// Using the user's default location as the hub
-const hub = {
-  name: "Chitkara University",
-  lng: 76.65973488064857,
-  lat: 30.516271329486433,
-};
-
-const destinations = [
-  { name: "New York", lng: -74.006, lat: 40.7128 },
-  { name: "São Paulo", lng: -46.6333, lat: -23.5505 },
-  { name: "Cape Town", lng: 18.4241, lat: -33.9249 },
-  { name: "Dubai", lng: 55.2708, lat: 25.2048 },
-  { name: "Mumbai", lng: 72.8777, lat: 19.076 },
-  { name: "Singapore", lng: 103.8198, lat: 1.3521 },
-  { name: "Tokyo", lng: 139.6917, lat: 35.6895 },
-  { name: "Sydney", lng: 151.2093, lat: -33.8688 },
-  { name: "London", lng: -0.1276, lat: 51.5074 },
-  { name: "Los Angeles", lng: -118.2437, lat: 34.0522 },
-  { name: "Paris", lng: 2.3522, lat: 48.8566 },
-];
-
-const arcs = destinations.map((dest) => ({
-  id: dest.name,
-  from: [hub.lng, hub.lat] as [number, number],
-  to: [dest.lng, dest.lat] as [number, number],
-}));
+import HomeScreenConstants from "../constant/HomeScreenConstants";
+import { motion } from "framer-motion";
+import Galaxy from "@/components/Galaxy";
 
 export default function HomeScreenBackgroundGlobeView(): React.JSX.Element {
+  const [showGlobe, setShowGlobe] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    (() => {
+      setTimeout(() => setShowGlobe(true), 1500);
+    })();
+  }, []);
   return (
     <React.Fragment>
-      <div className="bg-[#0E0E0E] w-full h-full">
-        <div className="w-full h-full absolute top-0 left-0 bg-[#0E0E0E] translate-x-[15%]">
+      <div className="bg-[#0E0E0E] w-full h-full relative">
+        {/* MARK: Background Shader Effect */}
+        <div className="w-screen h-screen top-0 left-0">
+          <Galaxy
+            mouseRepulsion
+            mouseInteraction
+            density={1}
+            glowIntensity={0.3}
+            saturation={0}
+            hueShift={140}
+            twinkleIntensity={0.3}
+            rotationSpeed={0.1}
+            repulsionStrength={2}
+            autoCenterRepulsion={0}
+            starSpeed={0.5}
+            speed={1}
+          />
+        </div>
+
+        <motion.div
+          animate={{
+            opacity: showGlobe ? 1 : 0,
+            filter: showGlobe ? "blur(0px)" : "blur(10px)",
+          }}
+          className="w-full h-full absolute top-0 left-0 translate-x-[15%] z-[11]"
+        >
           <Map
-            center={[hub.lng - 100, hub.lat]}
+            center={[
+              HomeScreenConstants.current.HUB.lng - 50,
+              HomeScreenConstants.current.HUB.lat - 10,
+            ]}
             zoom={3}
             projection={{ type: "globe" }}
           >
             <MapArc
-              data={arcs}
+              data={HomeScreenConstants.current.GLOBE_ARCS}
               paint={{
                 "line-color": "#3b82f6",
                 "line-width": 2,
-                "line-dasharray": [2, 2],
               }}
               interactive={false}
             />
           </Map>
-        </div>
+        </motion.div>
       </div>
     </React.Fragment>
   );
