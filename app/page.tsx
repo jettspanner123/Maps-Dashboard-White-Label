@@ -10,16 +10,15 @@ export default function Home(): React.JSX.Element {
   const { backgroundMapState } = useHomeScreenStore();
   return (
     <main className="w-full h-full">
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {backgroundMapState == HomeScreenBackgroundMapState.LOADING && (
           <motion.div
             exit={{
-              y: "-100vh",
+              y: "-110vh",
             }}
             animate={{
               y: 0,
             }}
-            initial={false}
             transition={{
               duration: 0.7,
               ease: [0.76, 0, 0.24, 1],

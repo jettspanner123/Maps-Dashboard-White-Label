@@ -5,11 +5,13 @@ export enum HomeScreenSideBarState {
 
 export enum HomeScreenBackgroundMapState {
   LOADED,
-  LOADING
+  LOADING,
 }
 export default interface HomeScreenStoreInterface {
   sideBarOpenState: HomeScreenSideBarState;
   setSideBarOpenState: (state: HomeScreenSideBarState) => void;
   backgroundMapState: HomeScreenBackgroundMapState;
   setBackgroundMapState: (state: HomeScreenBackgroundMapState) => void;
+  showBackgroundMapControls: boolean;
+  toggleBackgroundMapControls: () => void;
 }

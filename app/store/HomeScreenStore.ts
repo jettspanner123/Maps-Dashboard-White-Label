@@ -11,4 +11,9 @@ export const useHomeScreenStore = create<HomeScreenStoreInterface>((set) => ({
   backgroundMapState: HomeScreenBackgroundMapState.LOADING,
   setBackgroundMapState: (state: HomeScreenBackgroundMapState) =>
     set({ backgroundMapState: state }),
+  showBackgroundMapControls: false,
+  toggleBackgroundMapControls: () =>
+    set((state) => ({
+      showBackgroundMapControls: !state.showBackgroundMapControls,
+    })),
 }));

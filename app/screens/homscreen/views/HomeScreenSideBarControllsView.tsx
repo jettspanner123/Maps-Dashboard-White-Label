@@ -3,10 +3,20 @@ import SideBarControlsLocationListItem from "../fragments/SideBarControlsLocatio
 import ColorFactoryConstants from "@/app/constants/ColorFactoryConstants";
 import SideBarControlsLocationList from "@/app/components/static/SideBarControlsLocationList";
 import CurrentLocationConstants from "@/app/constants/CurrentLocationConstants";
-import { BsReverseLayoutSidebarInsetReverse } from "react-icons/bs";
+import {
+  BsFullscreenExit,
+  BsReverseLayoutSidebarInsetReverse,
+} from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import { useHomeScreenStore } from "@/app/store/HomeScreenStore";
-import { HomeScreenSideBarState } from "@/app/store/interfaces/HomeScreenStoreInterface";
+import {
+  HomeScreenBackgroundMapState,
+  HomeScreenSideBarState,
+} from "@/app/store/interfaces/HomeScreenStoreInterface";
+import HomeScreenFloatingActionButton from "@/app/components/static/HomeScreenFloatingActionButton";
+import { MdKeyboardCommandKey, MdOutlineRefresh } from "react-icons/md";
+import { FaMinus, FaPlus } from "react-icons/fa6";
+import { ImCompass } from "react-icons/im";
 
 export interface MapPlaceItem {
   name: string;
@@ -15,7 +25,14 @@ export interface MapPlaceItem {
 }
 
 export default function HomeScreenSideBarControlsView(): React.JSX.Element {
-  const { setSideBarOpenState, sideBarOpenState } = useHomeScreenStore();
+  const {
+    setSideBarOpenState,
+    sideBarOpenState,
+    setBackgroundMapState,
+    backgroundMapState,
+    toggleBackgroundMapControls,
+    showBackgroundMapControls,
+  } = useHomeScreenStore();
 
   function handleSidebarStateButton() {
     if (sideBarOpenState == HomeScreenSideBarState.OPEN)
@@ -23,13 +40,25 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
     else setSideBarOpenState(HomeScreenSideBarState.OPEN);
   }
 
+  function handleRefreshButton() {
+    setBackgroundMapState(HomeScreenBackgroundMapState.LOADING);
+    setTimeout(() => {
+      setBackgroundMapState(HomeScreenBackgroundMapState.LOADED);
+    }, 4000);
+  }
+
+  function handleToggleMapControls() {
+    toggleBackgroundMapControls();
+  }
+
   return (
     <React.Fragment>
       <div className="w-full h-full absolute top-0 left-0 flex p-6 z-20 pointer-events-none">
         <section className={`h-full flex-1 relative`}>
+          {/* MARK: Show Sidebar Button */}
           <AnimatePresence mode="wait">
             {sideBarOpenState == HomeScreenSideBarState.CLOSED && (
-              <motion.button
+              <motion.div
                 initial={{
                   scale: 0,
                   filter: "blur(10px)",
@@ -43,12 +72,18 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
                   filter: "blur(10px)",
                 }}
                 onClick={handleSidebarStateButton}
-                className="p-3 hover:bg-white/40 background-blur-100 bg-[#1A1A1A] rounded-xl cursor-pointer pointer-events-auto absolute top-[0.75rem] left-[0.5rem]"
+                style={{ backdropFilter: "blur(10px) " }}
+                className="hover:bg-white/10 h-20 w-20 flex justify-between items-center rounded-full border border-white/20 bg-[#1A1A1A] cursor-pointer pointer-events-auto absolute top-[0.75rem] left-[0.5rem]"
               >
-                <BsReverseLayoutSidebarInsetReverse color="white" size={35} />
-              </motion.button>
+                <BsReverseLayoutSidebarInsetReverse
+                  color="white"
+                  size={30}
+                  className="mx-auto"
+                />
+              </motion.div>
             )}
           </AnimatePresence>
+
           <motion.div
             animate={{
               x:
@@ -73,12 +108,21 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
               </h2>
               <button
                 onClick={handleSidebarStateButton}
-                className="hover:bg-white/10 p-3 rounded-xl cursor-pointer"
+                className="hover:bg-white/15 bg-white/10 p-3 rounded-xl cursor-pointer transition-colors"
               >
-                <BsReverseLayoutSidebarInsetReverse color="white" size={25} />
+                <BsReverseLayoutSidebarInsetReverse color="white" size={23} />
               </button>
             </div>
             <div className="w-full h-1 bg-white/10 mb-6" />
+
+            <input
+              placeholder="Enter Location."
+              className="w-full outline-none rounded-full bg-white/10 placeholder:text-white/80 font-roboto py-3 px-6 border border-white/15 text-white text-[1.25rem]"
+            />
+
+            <h3 className="font-bold font-roboto text-[1rem] text-white/40 mt-[1.5rem] mb-[0.5rem]">
+              Preset Locations
+            </h3>
             <SideBarControlsLocationList>
               {CurrentLocationConstants.current.PLACES.map((place) => (
                 <SideBarControlsLocationListItem
@@ -90,7 +134,50 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
           </motion.div>
         </section>
 
-        <section className={`h-full flex-1`}></section>
+        <section className={`h-full flex-1 relative`}>
+          <HomeScreenFloatingActionButton
+            onClick={handleRefreshButton}
+            className="top-[0.75rem] right-[0.5rem]"
+          >
+            <MdOutlineRefresh size={30} color="white" />
+          </HomeScreenFloatingActionButton>
+
+          <HomeScreenFloatingActionButton
+            onClick={handleToggleMapControls}
+            className={`top-[6.5rem] right-[0.5rem] ${showBackgroundMapControls ? `bg-white text-black` : `text-white`}`}
+          >
+            <MdKeyboardCommandKey size={26} />
+          </HomeScreenFloatingActionButton>
+
+          <AnimatePresence>
+            {showBackgroundMapControls && (
+              <motion.div
+                animate={{
+                  x: 0,
+                }}
+                exit={{
+                  x: 400,
+                }}
+                initial={{ x: 400 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.76, 0, 0.24, 1],
+                }}
+                className="absolute right-[0.5rem] bottom-[0.75rem] bg-[#1a1a1a] rounded-full border border-white/20 w-[5rem] flex flex-col gap-1 p-1.5 pointer-events-auto"
+              >
+                <button className="w-full aspect-square bg-white/10 hover:bg-white/20 rounded-t-full cursor-pointer flex justify-center items-center text-white">
+                  <FaPlus size={25} />
+                </button>
+                <button className="w-full aspect-square bg-white/10 hover:bg-white/20 cursor-pointer flex justify-center items-center text-white">
+                  <ImCompass size={23} />
+                </button>
+                <button className="w-full aspect-square bg-white/10 hover:bg-white/20 rounded-b-full cursor-pointer flex justify-center items-center text-white">
+                  <FaMinus size={25} />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
       </div>
     </React.Fragment>
   );

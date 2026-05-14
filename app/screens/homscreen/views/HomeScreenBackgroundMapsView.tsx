@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import {
   Map,
+  MapControls,
   MapMarker,
   MarkerContent,
   useMap,
