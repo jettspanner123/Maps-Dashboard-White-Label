@@ -10,7 +10,7 @@ export enum HomeScreenBackgroundMapState {
 
 export enum HomeScreenViewState {
   MAPS = "Maps View",
-  AIRFLOW = "Air Flow View"
+  AIRFLOW = "Airflow View"
 }
 export default interface HomeScreenStoreInterface {
   sideBarOpenState: HomeScreenSideBarState;

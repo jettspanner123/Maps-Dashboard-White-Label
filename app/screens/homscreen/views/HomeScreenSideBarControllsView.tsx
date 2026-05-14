@@ -64,6 +64,11 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
     toggleBackgroundMapControls();
   }
 
+  function handleViewStateChange(viewState_t: HomeScreenViewState) {
+    setViewState(viewState_t);
+    setIsViewStateDropdownExpanded(false);
+  }
+
   return (
     <React.Fragment>
       <div className="w-full h-full absolute top-0 left-0 flex p-6 z-20 pointer-events-none">
@@ -165,7 +170,7 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
                   duration: 0.7,
                   ease: [0.76, 0, 0.24, 1],
                 }}
-                className="inline-block"
+                className="inline-block text-[1.25rem]"
                 key={placeId}
               >
                 {placeId.split("-")[0]}
@@ -176,7 +181,7 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
           {/* MARK: View State Dropdown */}
           <motion.div
             animate={{
-              height: isViewStateDropdownExpanded ? "auto" : 80,
+              height: isViewStateDropdownExpanded ? 250 : 80,
               borderRadius: isViewStateDropdownExpanded ? 32 : 200,
               paddingInline: isViewStateDropdownExpanded ? 14 : 4,
               scale: isViewStateDropdownExpanded ? 1.1 : 1,
@@ -185,15 +190,14 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
               paddingBlock: isViewStateDropdownExpanded ? 14 : 0,
               paddingBottom: isViewStateDropdownExpanded ? 16 : 0,
             }}
-            whileTap={{
-              scale: isViewStateDropdownExpanded ? 0.95 : 1,
-            }}
-            className="absolute  bg-[#1a1a1a] cursor-pointer border border-white/20 w-[21rem] pointer-events-auto font-bold font-roboto text-white text-[1.35rem] overflow-hidden"
-            onClick={() =>
-              setIsViewStateDropdownExpanded(!isViewStateDropdownExpanded)
-            }
+            transition={{}}
+            whileTap={!isViewStateDropdownExpanded ? { scale: 0.95 } : {}}
+            className="absolute  bg-[#1a1a1a] cursor-pointer border border-white/20 w-[21rem] pointer-events-auto font-semibold font-roboto text-white text-[1.25rem] overflow-hidden"
           >
             <motion.div
+              onClick={() =>
+                setIsViewStateDropdownExpanded(!isViewStateDropdownExpanded)
+              }
               animate={{
                 backgroundColor: isViewStateDropdownExpanded
                   ? "#ffffff10"
@@ -222,14 +226,24 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
                 <SectionHeadingComponent text="Application View States" />
                 {HomeScreenConstants.current.VIEW_STATE_LIST.map(
                   (item, index) => {
+                    if (item.viewState == viewState) return;
                     return (
                       <div
                         key={`${item.name}-${item.viewState.toString()}-${index}`}
                         style={{
                           marginTop: index != 0 ? 8 : 0,
                         }}
-                        className="w-full h-[5rem] flex items-center py-1.5 gap-4 hover:bg-white/10 bg-white/5 rounded-full"
-                      ></div>
+                        onClick={() => handleViewStateChange(item.viewState)}
+                        className="w-full h-[5rem] flex items-center py-1.5 gap-4 hover:bg-white/10 bg-white/5 rounded-full p-1.5"
+                      >
+                        <div className="h-full aspect-square bg-white/10 rounded-full flex justify-center items-center">
+                          {item.icon}
+                        </div>
+
+                        <span className="w-full text-[1.25rem]">
+                          {item.name}
+                        </span>
+                      </div>
                     );
                   },
                 )}
@@ -237,7 +251,6 @@ export default function HomeScreenSideBarControlsView(): React.JSX.Element {
             )}
           </motion.div>
           {/* MARK: View State Dropdown End */}
-
           <HomeScreenFloatingActionButton
             onClick={handleToggleMapControls}
             className={`top-[6.5rem] right-[0.5rem] ${showBackgroundMapControls ? `bg-white text-black` : `text-white`}`}
